@@ -6,10 +6,10 @@ import Foundation
 
 let package = Package(name: "opentelemetry-swift",
                       platforms: [
-                        .macOS(.v12),
-                        .iOS(.v13),
-                        .tvOS(.v13),
-                        .watchOS(.v6)
+                        .macOS(.v10_13),
+                        .iOS(.v12),
+                        .tvOS(.v12),
+                        .watchOS(.v4)
                       ],
                       products: [
                         .library(name: "OpenTelemetryApi", targets: ["OpenTelemetryApi"]),
@@ -35,7 +35,8 @@ let package = Package(name: "opentelemetry-swift",
                         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.20.2"),
                         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.4"),
                         .package(url: "https://github.com/apple/swift-metrics.git", from: "2.1.1"),
-                        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.2.0")
+                        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.2.0"),
+                        .package(url: "https://github.com/ashleymills/Reachability.swift", from: "5.1.0")
                       ],
                       targets: [
                         .target(name: "OpenTelemetryApi",
@@ -194,7 +195,8 @@ extension Package {
                           exclude: ["README.md"]),
         .target(name: "NetworkStatus",
                 dependencies: [
-                  "OpenTelemetryApi"
+                  "OpenTelemetryApi",
+                  .product(name: "Reachability", package: "Reachability.swift", condition: .when(platforms: [.iOS, .macOS, .tvOS, .macCatalyst, .linux]))
                 ],
                 path: "Sources/Instrumentation/NetworkStatus",
                 linkerSettings: [.linkedFramework("CoreTelephony", .when(platforms: [.iOS]))]),
